@@ -39,7 +39,8 @@ $testi: (
   ),
   "title-2": (
     extend: "title-1", // inherit the proporties of "title-1" preset
-    font-size: 16rem
+    font-size: 16rem,
+    font-weight: 500
   ),
   "paragraph": (
     extend: "roboto",
