@@ -29,20 +29,20 @@ You can extend an existing preset using the ```extend``` attribute.
 ```sass
 $testi: (
   "title-1": (
-    "font-family": "Helvetica",
-    "font-size": 20rem,
-    "line-height": 1.3em,
-    "letter-spacing": 0.05em
+    font-family: "Helvetica",
+    font-size: 20rem,
+    line-height: 1.3em,
+    letter-spacing: 0.05em
   ),
   "title-2": (
-    "extend": "title-1", // inherit the proporties of "title-1" preset
-    "font-size": 16rem
+    extend: "title-1", // inherit the proporties of "title-1" preset
+    font-size: 16rem
   ),
   "paragraph": (
-    "font-family": "Helvetica",
-    "font-size": 14rem,
-    "line-height": 1.3em,
-    "font-weight": 300
+    font-family: "Helvetica",
+    font-size: 14rem,
+    line-height: 1.3em,
+    font-weight: 300
   ),
 );
 ```
@@ -51,11 +51,11 @@ This is the default configuration of a preset:
 
 ```sass
 $preset: (
-  "font-family": sans-serif,
-  "font-size": 1em,
-  "line-height": 1em,
-  "font-weight": 400,
-  "letter-spacing": 0em,
-  "antialiased": true
+  font-family: sans-serif,
+  font-size: 1em,
+  line-height: 1em,
+  font-weight: 400,
+  letter-spacing: 0em,
+  antialiased: true
 );
 ```
