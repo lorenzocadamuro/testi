@@ -28,8 +28,11 @@ You can extend an existing preset using the ```extend``` attribute.
 
 ```sass
 $testi: (
+  "helvetica": (
+    font-family: Helvetica, sans-serif
+  ),
   "title-1": (
-    font-family: "Helvetica",
+    extend: "helvetica",
     font-size: 20rem,
     line-height: 1.3em,
     letter-spacing: 0.05em
@@ -39,7 +42,7 @@ $testi: (
     font-size: 16rem
   ),
   "paragraph": (
-    font-family: "Helvetica",
+    extend: "helvetica",
     font-size: 14rem,
     line-height: 1.3em,
     font-weight: 300
