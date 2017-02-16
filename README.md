@@ -10,6 +10,10 @@ npm install testi
 ## Usage
 
 ```sass
+@import "node_modules/testi/testi";
+```
+
+```sass
 .box__title  {
   @include testi("title-1");
 }
