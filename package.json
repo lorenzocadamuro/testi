@@ -1,0 +1,23 @@
+{
+  "name": "testi",
+  "version": "1.0.0",
+  "description": "Create text styles with Sass",
+  "main": "_testi.scss",
+  "keywords": [
+    "css",
+    "sass",
+    "text",
+    "style",
+    "preset"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lorenzocadamuro/testi"
+  },
+  "author": "Lorenzo Cadamuro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lorenzocadamuro/testi/issues"
+  },
+  "homepage": "https://github.com/lorenzocadamuro/testi"
+}

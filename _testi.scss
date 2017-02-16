@@ -1,0 +1,77 @@
+@mixin testi($a:null, $b:null, $c:null, $d:null, $e:null, $f:null) {
+  @if global-variable-exists(testi) AND type-of($testi) == 'map' {
+    // returns a copy of the array with all falsy values removed
+    @function compact($list) {
+      @each $key, $value in $list {
+        @if $value == null or $value == "" {
+          $list: map-remove($list, $key);
+        }
+      }
+      @return $list;
+    }
+
+    // return a preset object according to the given key
+    @function getPreset($key) {
+      @if map-has-key($testi, $key) {
+        @return map-get($testi, $key);
+      }
+      @return null;
+    }
+
+    // return the style object according to the given key
+    @function getStyle($presetKey, $style) {
+      $preset: getPreset($presetKey);
+      @if $preset != null {
+        $style: map-merge(getStyle(map-get($preset, "extend"), $style), $preset);
+      }
+      @return $style;
+    }
+
+    @if type-of($a) == 'string' {
+      @if map-has-key($testi, $a) {
+        $style: (
+          font-family: sans-serif,
+          font-size: 1em,
+          line-height: 1em,
+          font-weight: 400,
+          letter-spacing: 0em,
+          antialiased: true
+        );
+
+        // extend default style with a preset
+        $style: getStyle($a, $style);
+
+        // extend style with the given arguments
+        $style: map-merge($style, compact((
+          font-size: $b,
+          line-height: $c,
+          font-weight: $d,
+          letter-spacing: $e,
+          antialiased: $f
+        )));
+
+        // set style
+        @each $key, $value in $style {
+          @if $key != 'extend' {
+            @if $key == 'antialiased' {
+              @if $value == true {
+                -webkit-font-smoothing: antialiased;
+                -moz-font-smoothing: antialiased;
+                -o-font-smoothing: antialiased;
+                font-smoothing: antialiased;
+              }
+            } @else {
+              #{$key}: $value
+            }
+          }
+        }
+      } @else {
+        @warn 'Preset "#{$a}" not found; available presets: #{map-keys($testi)}';
+      }
+    } @else {
+      @warn 'Text mixin require a preset name as first argument; available presets: #{map-keys($testi)}';
+    }
+  } @else {
+    @warn '"Testi" variable not found';
+  }
+}
