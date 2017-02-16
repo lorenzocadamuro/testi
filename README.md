@@ -25,7 +25,7 @@ npm install testi
 }
 ```
 
-## Setup
+## Configuration
 
 Use the global variable ```$testi``` to configure your text styles; every css property is accepted.<br />
 You can extend an existing preset using the ```extend``` attribute.
