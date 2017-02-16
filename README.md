@@ -30,14 +30,14 @@ You can extend an existing preset using the ```extend``` attribute.
 $testi: (
   "roboto": (
     font-family: 'Roboto',
-    antialiased: true, // not required, true by default
-    color: #111
+    color: #111,
+    antialiased: true // not required, true by default
   ),
   "title-1": (
     extend: "roboto",
     font-size: 4.0rem,
     line-height: 1.3em,
-    letter-spacing: 0.05em
+    letter-spacing: 0.1em
   ),
   "title-2": (
     extend: "title-1", // inherit the proporties of "title-1" preset
