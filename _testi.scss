@@ -1,4 +1,4 @@
-@mixin testi($a:null, $b:null, $c:null, $d:null, $e:null, $f:null) {
+@mixin testi($a:null, $b:null, $c:null, $d:null, $e:null) {
   @if global-variable-exists(testi) AND type-of($testi) == 'map' {
     // returns a copy of the array with all falsy values removed
     @function compact($list) {
@@ -30,11 +30,6 @@
     @if type-of($a) == 'string' {
       @if map-has-key($testi, $a) {
         $style: (
-          font-family: sans-serif,
-          font-size: 1em,
-          line-height: 1em,
-          font-weight: 400,
-          letter-spacing: 0em,
           antialiased: true
         );
 
@@ -46,8 +41,7 @@
           font-size: $b,
           line-height: $c,
           font-weight: $d,
-          letter-spacing: $e,
-          antialiased: $f
+          letter-spacing: $e
         )));
 
         // set style
