@@ -26,7 +26,7 @@ $testi: (
     antialiased: true // not required, true by default
   ),
   "title-1": (
-    extend: "roboto",
+    extend: "roboto", // inherit the proporties of "roboto" preset
     font-size: 4.0rem,
     line-height: 1.3em,
     letter-spacing: 0.1em
