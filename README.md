@@ -7,22 +7,10 @@ Create text styles with Sass.
 npm install testi
 ```
 
-## Usage
+## Syntax
 
-```sass
-@import "node_modules/testi/testi";
 ```
-
-```sass
-.box__title  {
-  @include testi("title-1");
-}
-.box__subtitle {
-  @include testi("title-2");
-}
-.box__description {
-  @include testi("paragraph");
-}
+@include testi(presetName, fontSize, lineHeight, fontWeight, letterSpacing);
 ```
 
 ## Configuration
@@ -55,4 +43,22 @@ $testi: (
     font-weight: 300
   )
 );
+```
+
+## Usage
+
+```sass
+@import "node_modules/testi/testi";
+```
+
+```sass
+.box__title  {
+  @include testi("title-1");
+}
+.box__subtitle {
+  @include testi("title-2");
+}
+.box__description {
+  @include testi("paragraph");
+}
 ```
