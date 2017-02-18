@@ -61,4 +61,7 @@ $testi: (
 .box__description {
   @include testi("paragraph");
 }
+.box__date {
+  @include testi("roboto", 1.5rem);
+}
 ```
