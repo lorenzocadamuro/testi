@@ -10,6 +10,19 @@
       @return $list;
     }
 
+    // merge recursively two lists
+    @function merge($parent-map, $child-map) {
+      $result: $parent-map;
+      @each $key, $value in $child-map {
+        @if (not map-has-key($result, $key)) or (type-of(map-get($result, $key)) != type-of($value)) or (not (type-of(map-get($result, $key)) == map and type-of($value) == map)) {
+          $result: map-merge($result, ($key: $value));
+        } @else {
+          $result: map-merge($result, ($key: merge(map-get($result, $key), $value)));
+        }
+      }
+      @return $result;
+    }
+
     // return a preset object according to the given key
     @function getPreset($key) {
       @if map-has-key($testi, $key) {
@@ -19,22 +32,52 @@
     }
 
     // return the style object according to the given key
-    @function getStyle($presetKey, $style) {
-      $preset: getPreset($presetKey);
-      @if $preset != null {
-        $style: map-merge(getStyle(map-get($preset, "extend"), $style), $preset);
+    @function getStyle($presetKey) {
+      $style: getPreset($presetKey);
+      @if $style != null {
+        $extend: getStyle(map-get($style, "extend"));
+        $style: map-remove($style, "extend");
+        $style: map-merge((
+          antialiased: true
+        ), merge($extend, $style));
+        @return $style;
+      } @else {
+        @return ();
       }
-      @return $style;
+    }
+
+    // apply a list of css rules
+    @mixin applyStyle($style) {
+      @each $key, $value in $style {
+        @if $key == 'antialiased' {
+          @if $value == true {
+            -webkit-font-smoothing: antialiased;
+            -moz-font-smoothing: antialiased;
+            -o-font-smoothing: antialiased;
+            font-smoothing: antialiased;
+          }
+        } @else if $key == 'responsive' {
+          @each $breakpoint, $style in map-get($style, 'responsive') {
+            @if mixin-exists('respond-to') and map-has-key(get-breakpoint(), $breakpoint) {
+              @include respond-to(#{$breakpoint}) {
+                @include applyStyle($style);
+              }
+            } @else {
+              @media #{$breakpoint} {
+                @include applyStyle($style);
+              }
+            }
+          }
+        } @else {
+          #{$key}: $value;
+        }
+      }
     }
 
     @if type-of($a) == 'string' {
       @if map-has-key($testi, $a) {
-        $style: (
-          antialiased: true
-        );
-
         // extend default style with a preset
-        $style: getStyle($a, $style);
+        $style: getStyle($a);
 
         // extend style with the given arguments
         $style: map-merge($style, compact((
@@ -45,20 +88,7 @@
         )));
 
         // set style
-        @each $key, $value in $style {
-          @if $key != 'extend' {
-            @if $key == 'antialiased' {
-              @if $value == true {
-                -webkit-font-smoothing: antialiased;
-                -moz-font-smoothing: antialiased;
-                -o-font-smoothing: antialiased;
-                font-smoothing: antialiased;
-              }
-            } @else {
-              #{$key}: $value
-            }
-          }
-        }
+        @include applyStyle($style);
       } @else {
         @warn 'Preset "#{$a}" not found; available presets: #{map-keys($testi)}';
       }
@@ -66,6 +96,6 @@
       @warn 'Text mixin require a preset name as first argument; available presets: #{map-keys($testi)}';
     }
   } @else {
-    @warn '"Testi" variable not found';
+    @warn '"$testi" variable not found';
   }
 }
