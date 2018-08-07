@@ -1,86 +1,90 @@
+// returns a copy of the array with all falsy values removed
+@function _testi_compact($list) {
+  @each $key, $value in $list {
+    @if $value == null or $value == "" {
+      $list: map-remove($list, $key);
+    }
+  }
+  @return $list;
+}
+
+// merge recursively two lists
+@function _testi_merge($parent-map, $child-map) {
+  $result: $parent-map;
+  @each $key, $value in $child-map {
+    @if (not map-has-key($result, $key)) or (type-of(map-get($result, $key)) != type-of($value)) or (not (type-of(map-get($result, $key)) == map and type-of($value) == map)) {
+      $result: map-merge($result, ($key: $value));
+    } @else {
+      $result: map-merge($result, ($key: _testi_merge(map-get($result, $key), $value)));
+    }
+  }
+  @return $result;
+}
+
+// return a preset object according to the given key
+@function _testi_getPreset($key) {
+  @if map-has-key($testi, $key) {
+    @return map-get($testi, $key);
+  }
+  @return null;
+}
+
+// return the style object according to the given key
+@function _tetsi_getStyle($presetKey) {
+  $style: _testi_getPreset($presetKey);
+  @if $style != null {
+    $extend: _tetsi_getStyle(map-get($style, "extend"));
+    $style: map-remove($style, "extend");
+    $style: map-merge((
+      antialiased: true
+    ), _testi_merge($extend, $style));
+    @return $style;
+  } @else {
+    @return ();
+  }
+}
+
+// apply a list of css rules
+@mixin applyStyle($style) {
+  @each $key, $value in $style {
+    @if $key == 'antialiased' {
+      @if $value == true {
+        -webkit-font-smoothing: antialiased;
+        -moz-font-smoothing: antialiased;
+        -o-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+      }
+    } @else if $key == 'mq' {
+      @each $breakpoint, $style in map-get($style, 'mq') {
+        @if mixin-exists('respond-to') and map-has-key(get-breakpoint(), $breakpoint) {
+          @include respond-to(#{$breakpoint}) {
+            @include applyStyle($style);
+          }
+        } @else if mixin-exists('mq') and map-has-key($mq-breakpoints, $breakpoint)  {
+          @include mq($until: #{$breakpoint}) {
+            @include applyStyle($style);
+          }
+        } @else {
+          @media #{$breakpoint} {
+            @include applyStyle($style);
+          }
+        }
+      }
+    } @else {
+      #{$key}: $value;
+    }
+  }
+}
+
 @mixin testi($a:null, $b:null, $c:null, $d:null, $e:null) {
   @if global-variable-exists(testi) AND type-of($testi) == 'map' {
-    // returns a copy of the array with all falsy values removed
-    @function compact($list) {
-      @each $key, $value in $list {
-        @if $value == null or $value == "" {
-          $list: map-remove($list, $key);
-        }
-      }
-      @return $list;
-    }
-
-    // merge recursively two lists
-    @function merge($parent-map, $child-map) {
-      $result: $parent-map;
-      @each $key, $value in $child-map {
-        @if (not map-has-key($result, $key)) or (type-of(map-get($result, $key)) != type-of($value)) or (not (type-of(map-get($result, $key)) == map and type-of($value) == map)) {
-          $result: map-merge($result, ($key: $value));
-        } @else {
-          $result: map-merge($result, ($key: merge(map-get($result, $key), $value)));
-        }
-      }
-      @return $result;
-    }
-
-    // return a preset object according to the given key
-    @function getPreset($key) {
-      @if map-has-key($testi, $key) {
-        @return map-get($testi, $key);
-      }
-      @return null;
-    }
-
-    // return the style object according to the given key
-    @function getStyle($presetKey) {
-      $style: getPreset($presetKey);
-      @if $style != null {
-        $extend: getStyle(map-get($style, "extend"));
-        $style: map-remove($style, "extend");
-        $style: map-merge((
-          antialiased: true
-        ), merge($extend, $style));
-        @return $style;
-      } @else {
-        @return ();
-      }
-    }
-
-    // apply a list of css rules
-    @mixin applyStyle($style) {
-      @each $key, $value in $style {
-        @if $key == 'antialiased' {
-          @if $value == true {
-            -webkit-font-smoothing: antialiased;
-            -moz-font-smoothing: antialiased;
-            -o-font-smoothing: antialiased;
-            font-smoothing: antialiased;
-          }
-        } @else if $key == 'responsive' {
-          @each $breakpoint, $style in map-get($style, 'responsive') {
-            @if mixin-exists('respond-to') and map-has-key(get-breakpoint(), $breakpoint) {
-              @include respond-to(#{$breakpoint}) {
-                @include applyStyle($style);
-              }
-            } @else {
-              @media #{$breakpoint} {
-                @include applyStyle($style);
-              }
-            }
-          }
-        } @else {
-          #{$key}: $value;
-        }
-      }
-    }
-
     @if type-of($a) == 'string' {
       @if map-has-key($testi, $a) {
         // extend default style with a preset
-        $style: getStyle($a);
+        $style: _tetsi_getStyle($a);
 
         // extend style with the given arguments
-        $style: map-merge($style, compact((
+        $style: map-merge($style, _testi_compact((
           font-size: $b,
           line-height: $c,
           font-weight: $d,
