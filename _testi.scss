@@ -61,7 +61,7 @@
             @include applyStyle($style);
           }
         } @else if mixin-exists('mq') and map-has-key($mq-breakpoints, $breakpoint)  {
-          @include mq($until: #{$breakpoint}) {
+          @include mq($from: #{$breakpoint}) {
             @include applyStyle($style);
           }
         } @else {
