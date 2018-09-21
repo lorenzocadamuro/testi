@@ -1,3 +1,5 @@
+$testi_debug: false;
+
 // returns a copy of the array with all falsy values removed
 @function _testi_compact($list) {
   @each $key, $value in $list {
@@ -93,6 +95,25 @@
 
         // set style
         @include applyStyle($style);
+
+        @if $testi_debug == true {
+          &:before {
+            content: '#{$a}';
+            display: block;
+            max-width: 300px;
+            font-family: Arial;
+            font-weight: bold;
+            padding: 2px;
+            font-size: 10px;
+            line-height: 9px;
+            color: black;
+            background: #00ff30;
+            font-family: Arial;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0em;
+          }
+        }
       } @else {
         @warn 'Preset "#{$a}" not found; available presets: #{map-keys($testi)}';
       }
